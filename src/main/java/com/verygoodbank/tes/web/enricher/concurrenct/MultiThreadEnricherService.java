@@ -61,8 +61,6 @@ public class MultiThreadEnricherService implements Enricher {
             chunkDispatcher.dispatch();
 
             closeChunkProcessor(chunkQueue, chunksProcessors);
-        } catch (Exception e) {
-            throw new RuntimeException("Error processing stream", e);
         }
     }
 
@@ -104,10 +102,10 @@ public class MultiThreadEnricherService implements Enricher {
     @SuppressWarnings("StatementWithEmptyBody")
     private void closeChunkProcessor(SpmcArrayQueue<ByteBuffer> chunkQueue, List<ChunkProcessor> chunkProcessors) {
         for (int i = 0; i < chunkProcessors.size(); i++) {
-            while (!chunkQueue.offer(POISON_PILL));
+            while (!chunkQueue.offer(POISON_PILL)) ;
         }
         for (ChunkProcessor chunkProcessor : chunkProcessors) {
-            while (chunkProcessor.isRunning());
+            while (chunkProcessor.isRunning()) ;
         }
     }
 

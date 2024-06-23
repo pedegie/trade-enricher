@@ -20,11 +20,8 @@ class Sender {
     WritableByteChannel writableByteChannel;
     AtomicBoolean sending = new AtomicBoolean(false);
 
-    @SneakyThrows
     public Sender(OutputStream outputStream) {
         this.writableByteChannel = Channels.newChannel(outputStream);
-        var header = String.join(",", HEADER) + System.lineSeparator();
-        writableByteChannel.write(ByteBuffer.wrap(header.getBytes()));
     }
 
     @SneakyThrows
@@ -40,6 +37,12 @@ class Sender {
 
     @SuppressWarnings("StatementWithEmptyBody")
     private void lock() {
-        while (!sending.compareAndSet(false, true));
+        while (!sending.compareAndSet(false, true)) ;
+    }
+
+    @SneakyThrows
+    public void writeHeader() {
+        var header = String.join(",", HEADER) + System.lineSeparator();
+        writableByteChannel.write(ByteBuffer.wrap(header.getBytes()));
     }
 }

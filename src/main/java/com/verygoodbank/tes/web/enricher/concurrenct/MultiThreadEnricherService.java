@@ -52,11 +52,13 @@ public class MultiThreadEnricherService implements Enricher {
 
         try (var source = new BufferedInputStream(inputStream, BUFFER_SIZE);
              var output = new BufferedOutputStream(outputStream, BUFFER_SIZE)) {
-            SpmcArrayQueue<ByteBuffer> chunkQueue = new SpmcArrayQueue<>(threads);
+            var chunkQueue = new SpmcArrayQueue<ByteBuffer>(threads);
 
             var sender = new Sender(output);
+            var chunksProcessors = initializeChunkProcessors(chunkQueue, sender);
+
+            sender.writeHeader();
             var chunkDispatcher = new ChunkDispatcher(chunkQueue, source);
-            List<ChunkProcessor> chunksProcessors = initializeChunkProcessors(chunkQueue, sender);
 
             chunkDispatcher.dispatch();
 

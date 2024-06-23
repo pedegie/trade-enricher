@@ -41,7 +41,7 @@ Below, I have included a brief description of how the concurrent version was acc
 Both versions stream the input - regardless of the number of requests and the size of the files, they should not consume more than 200-300MB during processing.
 
 In both approaches, I decided to load the mappings file into memory. I would do this in production as well, even if the file were significantly larger. Alternatively,
-I might store it off-heap to reduce pressure on the garbage collector (GC). However, this is crucial for efficient matching. Without it, for completely random input, we wouldn't be 
+I might store it off-heap to reduce pressure on the garbage collector. However, this is crucial for efficient matching. Without it, for completely random input, we wouldn't be 
 able to intelligently cache and performance would be terribly poor.
 
 In unit tests, instead of loading files from resources, I create CSVs in RAM using a library. 
@@ -49,6 +49,8 @@ This way, I don't have to create multiple files with different contents to test 
 
 ### Future improvements
 Both versions lack sufficient logging. There is a need for more information on what is happening and how long each process takes
+
+Unit tests would also be useful where we mock input/output streams and, for example, throw an exception on read or write to simulate different scenarios
 
 #### Serial
 In the serial version (the readable one) one improvement would be to use a better library (more efficient, e.g., FastCSV or Chronicle-Wire lib). Additionally, the current code  

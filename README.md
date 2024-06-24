@@ -47,6 +47,11 @@ able to intelligently cache and performance would be terribly poor.
 In unit tests, instead of loading files from resources, I create CSVs in RAM using a library. 
 This way, I don't have to create multiple files with different contents to test various use cases, and the tests execute much faster
 
+All enricher classes are located in the same package, without separation into DAO, controller, service layers, etc. This is part of a hexagonal architecture, which solves many problems, including not having to think about the differences between "xManager," "xService," and "xProvider," and which class to use. Here, there is only one public class, so we don't have a choice and only use it.
+In the "layered" approach, everything must be public because layers communicate with each other (service uses DAO, etc.), and if they are in different packages, they must be public in Java.
+Additionally, it is much easier to test because by testing just one public service, we end up testing 100% of the business logic.
+It is also easier to extract a microservice from it since everything is in one package
+
 ### Future improvements
 Both versions lack sufficient logging. There is a need for more information on what is happening and how long each process takes
 
